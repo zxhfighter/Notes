@@ -1,0 +1,31 @@
+{
+  "tags": [
+    "diveintopython",
+    "docbook",
+    "html"
+  ],
+  "comments_link": null,
+  "id": 256,
+  "internal_id": {
+    "__value__": [
+      222,
+      213,
+      180,
+      248
+    ],
+    "__class__": "bytes"
+  },
+  "published": true,
+  "title": "Dive into history, 2009 edition",
+  "published_date": [
+    2009,
+    3,
+    27,
+    22,
+    20,
+    42,
+    4,
+    86,
+    -1
+  ]
+}

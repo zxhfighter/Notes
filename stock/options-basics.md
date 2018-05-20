@@ -112,3 +112,145 @@ A brief word on options pricing. As we’ve seen, the relative price of an optio
 
 ## Types Of Options
 
+We’ve already talked about the differences between calls and puts, but there exist some other ways of categorizing options contracts. American options can be exercised at any time between the date of purchase and the expiration date. The example about Cory's Tequila Co. is an example of the use of an American option. Most exchange-traded options are of this type. European options are different from American options in that they can only be exercised at the end of their lives on their expiration date. The distinction between American and European options has nothing to do with geographic location, only with early-exercise. Most options on stock indices are of the European type. Because the right to exercise early has some value, an American option typically carries a higher premium than an otherwise identical European option.
+
+### American and European Options
+
+Options can also be categorized by their duration until expiration. Short-term options are those that expire generally in a year or less. Long-term options with expirations greater than a year are classified as long-term equity anticipation securities, or LEAPs. By providing opportunities to control and manage risk or even to speculate, LEAPS are virtually identical to regular options. LEAPS, however, provide these opportunities for much longer periods of time. Although they are not available on all stocks, LEAPS are available on most widely held issues.
+
+Options can also be distinguished by when their expiration date falls. Traditionally, listed options have expired on the third Friday of the month. However due to increased demand, sets of options now expire weekly on each Friday, at the end of the month or even on a daily basis.
+
+### Options Exchanges
+
+Options traded on exchanges are called listed options. In the U.S. there are a number of exchanges, both physical and electronic, where options are traded. Options can also be traded directly between counterparties​ with the use of an exchange; these are known as over-the-counter (OTC) options. Many times, financial institutions will use OTC options to tailor specific outcome events that are not available among listed options. In order to provide liquidity to options markets, there exist market makers who are required to “make” a two-sided market in an option if asked to quote. Market makers, using theoretical pricing models, can take advantage of arbitrage（套利） and theoretical mispricings between the options’ perceived value and its market price.
+
+The simple calls and puts we've discussed are sometimes referred to as plain vanilla options. Even though the subject of options can be difficult to understand at first, these plain vanilla options are as easy as it gets. Because of the versatility of options, there are many other types and variations of options. Non-standard options are called exotic options, which are either variations on the payoff profiles of the plain vanilla options or are wholly different products with "option-ality" embedded in them. For example, so-called binary options have a simple payoff structure that is determined if the payoff event happens and doesn’t care about the degree. Other types of exotic options include break-out, break-in, barrier options, lookback options, Asian options and Bermudan options.
+
+## Options Basics: How To Read An Options Table
+
+As more and more traders have learned of the multitude of potential benefits available to them via the use of options, the trading volume in options has proliferated（激增） over the years. This trend has also been driven by the advent of electronic trading and data dissemination（传播）. Some traders use options to speculate on price direction, others to hedge existing or anticipated positions and others still to craft unique positions that offer benefits not routinely available to the trader of just the underlying stock, index or futures contract (for example, the ability to make money if the underlying security remains relatively unchanged). Regardless of their objective, one of the keys to success is to pick the right option, or combination of options, needed to create a position with the desired risk-to-reward tradeoff(s). As such, today's savvy option trader is typically looking at a more sophisticated set of data when it comes to options than the traders of decades past.
+
+The Old Days of Option Price Reporting
+
+In "the old days" some newspapers used to list rows and rows of nearly indecipherable（难懂的） option price data deep within its financial section such as that displayed in Figure 1.
+
+Investor's Business Daily and the Wall Street Journal still include a partial listing of option data for many of the more active optionable stocks. The old newspaper listings included mostly just the basics – a "P" or a "C" to indicate if the option a call or a put, the strike price, the last trade price for the option, and in some cases, volume and open interest figures. And while this was all well and good, many of today's option traders have a greater understanding of the variables that drive option trades. Among these variables are a number of "Greek" values derived from an option pricing model, implied option volatility and the all important bid/ask spread. (Learn more in Using the Greeks to Understand Options.)
+
+As a result, more and more traders are finding option data via on-line sources. While each source has its own format for presenting the data, the key variables generally include those listed in Figure 2. The option listing shown in Figure 2 is from Optionetics Platinum software. The variables listed are the ones most looked at by today's better educated option trader.
+
+The data provided in Figure 2 provides the following information:
+
+Column 1 – OpSym: this field designates the underlying stock symbol (IBM), the contract month and year (MAR10 means March of 2010), the strike price (110, 115, 120, etc.) and whether it is a call or a put option (a C or a P).
+
+Column 2 – Bid (pts): The "bid" price is the latest price offered by a market maker to buy a particular option. What this means is that if you enter a "market order" to sell the March 2010, 125 call, you would sell it at the bid price of $3.40.
+
+Column 3 – Ask (pts): The "ask" price is the latest price offered by a market maker to sell a particular option. What this means is that if you enter a "market order" to buy the March 2010, 125 call, you would buy it at the ask price of $3.50.
+
+NOTE: Buying at the bid and selling at the ask is how market makers make their living. It is imperative for an option trader to consider the difference between the bid and ask price when considering any option trade. The more active the option, typically the tighter the bid/ask spread. A wide spread can be problematic for any trader, especially a short-term trader. If the bid is $3.40 and the ask is $3.50, the implication is that if you bought the option one moment (at $3.50 ask) and turned around and sold it an instant later (at $3.40 bid), even though the price of the option did not change, you would lose -2.85% on the trade ((3.40-3.50)/3.50).
+
+Column 4 – Extrinsic Bid/Ask (pts): This column displays the amount of time premium built into the price of each option (in this example there are two prices, one based on the bid price and the other on the ask price). This is important to note because all options lose all of their time premium by the time of option expiration. So this value reflects the entire amount of time premium presently built into the price of the option.
+
+Column 5 – Implied Volatility (IV) Bid/Ask (%): This value is calculated by an option pricing model such as the Black-Scholes model, and represents the level of expected future volatility based on the current price of the option and other known option pricing variables (including the amount of time until expiration, the difference between the strike price and the actual stock price and a risk-free interest rate). The higher the IV Bid/Ask (%)the more time premium is built into the price of the option and vice versa. If you have access to the historical range of IV values for the security in question you can determine if the current level of extrinsic value is presently on the high end (good for writing options) or low end (good for buying options).
+
+Column 6 – Delta Bid/Ask (%): Delta is a Greek value derived from an option pricing model and which represents the "stock equivalent position" for an option. The delta for a call option can range from 0 to 100 (and for a put option from 0 to -100). The present reward/risk characteristics associated with holding a call option with a delta of 50 is essentially the same as holding 50 shares of stock. If the stock goes up one full point, the option will gain roughly one half a point. The further an option is in-the-money, the more the position acts like a stock position. In other words, as delta approaches 100 the option trades more and more like the underlying stock i.e., an option with a delta of 100 would gain or lose one full point for each one dollar gain or loss in the underlying stock price. (For more check out Using the Greeks to Understand Options.)
+
+Column 7 – Gamma Bid/Ask (%): Gamma is another Greek value derived from an option pricing model. Gamma tells you how many deltas the option will gain or lose if the underlying stock rises by one full point. So for example, if we bought the March 2010 125 call at $3.50, we would have a delta of 58.20. In other words, if IBM stock rises by a dollar this option should gain roughly $0.5820 in value. In addition, if the stock rises in price today by one full point this option will gain 5.65 deltas (the current gamma value) and would then have a delta of 63.85. From there another one point gain in the price of the stock would result in a price gain for the option of roughly $0.6385.
+
+Column 8 – Vega Bid/Ask (pts/% IV): Vega is a Greek value that indicates the amount by which the price of the option would be expected to rise or fall based solely on a one point increase in implied volatility. So looking once again at the March 2010 125 call, if implied volatility rose one point – from 19.04% to 20.04%, the price of this option would gain $0.141. This indicates why it is preferable to buy options when implied volatility is low (you pay relatively less time premium and a subsequent rise in IV will inflate the price of the option) and to write options when implied volatility is high (as more premium is available and a subsequent decline in IV will deflate the price of the option).
+
+Column 9 – Theta Bid/Ask (pts/day): As was noted in the extrinsic value column, all options lose all time premium by expiration. In addition, "time decay" as it is known, accelerates as expiration draws closer. Theta is the Greek value that indicates how much value an option will lose with the passage of one day's time. At present, the March 2010 125 Call will lose $0.0431 of value due solely to the passage of one day's time, even if the option and all other Greek values are otherwise unchanged.
+
+Column 10 – Volume: This simply tells you how many contracts of a particular option were traded during the latest session. Typically – though not always - options with large volume will have relatively tighter bid/ask spreads as the competition to buy and sell these options is great.
+
+Column 11 – Open Interest: This value indicates the total number of contracts of a particular option that have been opened but have not yet been offset.
+
+Column 12 – Strike: The "strike price" for the option in question. This is the price that the buyer of that option can purchase the underlying security at if he chooses to exercise his option. It is also the price at which the writer of the option must sell the underlying security if the option is exercised against him.
+
+A table for the respective put options would similar, with two primary differences:
+
+* Call options are more expensive the lower the strike price, put options are more expensive the higher the strike price. With calls, the lower strike prices have the highest option prices, with option prices declining at each higher strike level. This is because each successive strike price is either less in-the-money or more out-of-the-money, thus each contains less "intrinsic value" than the option at the next lower strike price.
+
+* With puts, it is just the opposite. As the strike prices go higher, put options become either less-out-of-the-money or more in-the-money and thus accrete more intrinsic value. Thus with puts the option prices are greater as the strike prices rise.
+
+For call options, the delta values are positive and are higher at lower strike price. For put options, the delta values are negative and are higher at higher strike price. The negative values for put options derive from the fact that they represent a stock equivalent position. Buying a put option is similar to entering a short position in a stock, hence the negative delta value.
+
+Option trading and the sophistication level of the average option trader have come a long way since option trading began decades ago. Today's option quote screen reflects these advances.
+
+## Options Basics: Options Spreads
+
+Options spreading is one common use of these securities and involves buying and selling options at the same time (spreading) or buying combinations of options. In this section, we will provide a very basic overview of the most common options spreads and combinations.
+
+### Long Calls and Puts
+
+The simplest options position is a long call (or put) by itself. This position profits if the price of the underlying rises and your downside is limited to the option premium if it does not. If you simultaneously buy a put option with the same strike and expiration, you’ve created a straddle. This position pays off if the underlying price rises or falls; however if the price remains relatively stable, you lose both the call and the put premiums. A similar strategy is to buy a call and then also buy a put with a lower strike, known as a strangle. A strangle requires larger price moves either way to profit, but is also less expensive than a straddle. On the other hand, being short either a straddle or a strangle (selling both options) would profit from a market that doesn’t move very much.
+
+### Spreads Bulls and Butterflies
+
+
+Options Basics: Introduction
+Options Basics: What Are Options?
+Options Basics: Why Use Options?
+Options Basics: How Options Work
+Options Basics: Types Of Options
+Options Basics: How To Read An Options Table
+Options Basics: Options Spreads
+Options Basics: Options Risks
+Options Basics: Conclusion
+
+Options spreading is one common use of these securities and involves buying and selling options at the same time (spreading) or buying combinations of options. In this section, we will provide a very basic overview of the most common options spreads and combinations.
+
+Long Calls and Puts
+The simplest options position is a long call (or put) by itself. This position profits if the price of the underlying rises and your downside is limited to the option premium if it does not. If you simultaneously buy a put option with the same strike and expiration, you’ve created a straddle. This position pays off if the underlying price rises or falls; however if the price remains relatively stable, you lose both the call and the put premiums. A similar strategy is to buy a call and then also buy a put with a lower strike, known as a strangle. A strangle requires larger price moves either way to profit, but is also less expensive than a straddle. On the other hand, being short either a straddle or a strangle (selling both options) would profit from a market that doesn’t move very much.
+
+Spreads Bulls and Butterflies
+A call spread or bull vertical spread is created by buying a call and simultaneously selling another call with a higher strike price. The spread is profitable if the underlying asset increases in price, but this upside is limited by virtue of the short call. The benefit, however, is that selling the call reduces the cost of buying the other one. Similarly, a put spread or bear vertical spread involves buying a put and selling a second put with a lower strike. If you buy and sell options with different expirations it is known as a calendar spread or time spread.
+
+A butterfly consists of options at three strikes, equally spaced apart, where all options are of the same type (either all calls or all puts) and have the same expiration. In a long butterfly, the middle strike option is sold and the outside strikes are bought in a ratio of 1:2:1 (buy one, sell two, buy one). If this ratio does not hold, it is not a butterfly. The outside strikes are commonly referred to as the wings of the butterfly, and the inside strike as the body. The value of a butterfly can never fall below zero. An example of a butterfly would be to go long a 70 call, short two 75 calls, and long an 80 call. The identical spread could also be made with long the 70 put, short two 75 puts, and long an 80 put. Being long a butterfly profits from a quiet market. Similar to a butterfly are the condor, iron butterfly, and iron condor.
+
+We addressed briefly how a synthetic position in the underlying can be created from options. Combining options positions with the underlying can also produce synthetic options. This has to do with what is known as put-call parity where
+
+    Call Price – Put Price = Underlying Price – Strike Price.
+
+Rearranging this equation we can create a synthetic long call for a given strike price by buying a put and also buying the underlying. A synthetic put is likewise a long call combined with going short the underlying. Combining spreads with a trade in the underlying can also create novel positions such as the collar, fence, or risk reversal, all names for the same strategy: selling an upside call, buying a downside put, and buying the underlying.
+
+## Options Risks
+
+Because options prices can be modeled mathematically with a model such as Black-Scholes, many of the risks associated with options can also be modeled and understood. This particular feature of options actually makes them arguable less risky than other asset classes, or at least allows the risks associated with options to be understood and evaluated. Individual risks have been assigned Greek letter names, and are sometimes referred to simply as the greeks.
+
+### Meet the Greeks
+
+Delta is the change in option price per unit (point) change in the underlying price and thus represents the directional risk. Delta is interpreted as the hedge ratio, or alternatively the equivalent position in the underlying security: a 4000 delta position is equivalent to long 4000 shares.
+
+The delta can represent the probability an option has at finishing in the money (a 40-delta option has a 40% chance of finishing in the money). At-the-money options always have a 50 delta. In-the-money options have a delta greater than 50, and out-of-the-money options less than 50. Increasing volatility or time to expiration causes deltas to tend to 50.
+
+Gamma is the change in delta per unit (point) change in the underlying security. The gamma shows how fast the delta will move if the underlying security moves a point. This is an important value to watch, since it tells you how much greater your directional risk increases as the underlying moves. Options at the money have the largest gammas and those close to expiration also have the largest gammas. Lowering volatility raises the gamma.
+
+Theta is the change in option price per unit (day) change in time. Also known as time decay risk, it represents how much value an option loses as time passes. Long-term options decay at a slower rate than near-term options. The theta is opposite in sign to the gamma and can represent the trade-off between time passing and the underlying security moving. Options near expiration have the highest theta. At the money options also have the greatest theta. As volatility is increased, the theta will also increase.
+
+Vega is the risk to volatility risk, or the change in option price per unit (percent) change in volatility. If an option has a 2 vega and the vol. Goes up 1%, the option value increases by $2. Out of the money options have the largest vega as a percent of option value. Long-term options also have the highest vegas. At the money options have fairly stable vega’s with respect to changes in volatility.
+
+Rho is the interest rate risk: the change in option price per unit change in interest rates. A position with positive Rho will be helped by an increase in interest rates and a negative rho will be helped by a decrease in interest rates.
+
+
+## Conclusion
+
+We hope this tutorial has given you some insight into the world of options. Once again, we must emphasize that options aren't for all investors. Options are sophisticated trading tools that can be dangerous if you don't educate yourself before using them. Please use this tutorial as it was intended – as a starting point to learning more about options.
+
+Let's recap:
+
+- An option is a contract giving the buyer the right but not the obligation to buy or sell an underlying asset at a specific price on or before a certain date.
+- Options are derivatives because they derive their value from an underlying asset.
+- A call gives the holder the right to buy an asset at a certain price within a specific period of time.
+- A put gives the holder the right to sell an asset at a certain price within a specific period of time.
+- There are four types of participants in options markets: buyers of calls, sellers of calls, buyers of puts, and sellers of puts.
+- Buyers are often referred to as holders and sellers are also referred to as writers.
+- The price at which an underlying stock can be purchased or sold is called the strike price.
+- The total cost of an option is called the premium, which is determined by factors including the stock price, strike price and time remaining until expiration.
+- The premium of an option increases as the chances of the event of the option finishing in-the-money increases.
+- A stock option contract typically represents 100 shares of the underlying stock.
+- Investors use options both to speculate and hedge risk.
+- Spreads and synthetic positions highlight the versatility of options contracts
+- Employee stock options are different from listed options because they are a contract between the company and the holder. (Employee stock options do not involve any third parties.)
+- The two main classifications of options are American and European. Options can also be distinguished as listed/OTC, or vanilla/exotic, among other classification schemes.
+- Long term options are known as LEAPS.
+- Options risks are defined by the greeks and allows options risks to be understood and evaluated.-
