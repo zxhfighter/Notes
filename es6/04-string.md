@@ -2,7 +2,8 @@
 
 ## 模板字符串
 
-模板字符串（template string）是增强版的字符串，用反引号（`）标识。它可以当作普通字符串使用，也可以用来定义多行字符串，或者在字符串中嵌入变量。
+模板字符串（template string）是增强版的字符串，用反引号（`）标识。它可以当作普通字符串使用，也可以用来定义多行字符串
+，或者在字符串中嵌入变量。
 
 ```js
 `${expression}`
@@ -10,27 +11,107 @@
 
 ## 新增方法
 
-- `str.includes(searchString[, position])`
+### includes
 
-The includes() method determines whether one string may be found within another string, returning true or false as appropriate.
+判断字符串是否包含某个子串，以前可以使用 `indexOf()` 是否等于 -1 来判断是否包含。
 
-- `str.startsWith(searchString[, position])`
+```
+str.includes(searchString[, position])
+```
 
-The startsWith() method determines whether a string begins with the characters of a specified string, returning true or false as appropriate.
+例子：
 
-- `str.endsWith(searchString)`
+```ts
+// 以前使用 'abcde'.indexOf('cd') !== -1
+'abcde'.includes('cd') // => true，
+'abcde'.includes('cd', 3) // => false
+```
 
-- `str.repeat(count)`
+### startsWith
 
-The repeat() method constructs and returns a new string which contains the specified number of copies of the string on which it was called, concatenated together.
+判断字符串是否以某个子串开头，以前可以使用 `indexOf()` 是否等于 0 来判断。
 
-- `str.padStart(targetLength [, padString])`
+```
+str.startsWith(searchString[, position])
+```
 
-The padStart() method pads the current string with another string (repeated, if needed) so that the resulting string reaches the given length. The padding is applied from the start (left) of the current string.
+例子：
 
-- `str.padEnd(targetLength [, padString])`
+```ts
+'abcde'.startsWith('abc') // => true，
+'abcde'.startsWith('cde', 2) // => true
+'abcde'.startsWith('cde', 3) // => false
+```
 
-The padEnd() method pads the current string with a given string (repeated, if needed) so that the resulting string reaches a given length. The padding is applied from the end (right) of the current string.
+### endsWith
+
+判断字符串是否以某个子串结尾，以前可以使用 `indexOf()` 以及字符串的相关长度计算得出。
+
+```
+str.endsWith(searchString)
+```
+
+例子：
+
+```ts
+'abcde'.endsWith('de') // true
+'.jpg'.endsWith(fileName)
+
+// 自己实现的算法
+function endsWith(str, substr) {
+  if (substr.length > str.length) {
+    return false;
+  }
+  return (str.length - substr.length) === str.indexOf(substr);
+}
+```
+
+### repeat
+
+字符串重复 N 遍，可以用来快速生成数据，等价于 `Array(N).fill(str).join('')` 用法。
+
+```ts
+str.repeat(N)
+```
+
+例子：
+
+```ts
+'AB'.repeat(10)
+Array(10).fill('AB').join('')
+```
+
+### padStart
+
+在字符串开始位置填充特定数量的填充字符串（如有需要，会重复，超出会截断），以便达到指定的字符串目标长度。
+
+```
+str.padStart(targetLength [, padString])
+```
+
+例子：
+
+```ts
+'abcd'.padStart(10, '012') // => 012012abcd
+'abcd'.padStart(9, '012') // => 01201abcd
+'abcd'.padStart(3, '012') // => abcd
+```
+
+### padEnd
+
+在字符串结束位置填充特定数量的填充字符串（如有需要，会重复，超出会截断），以便达到指定的字符串目标长度。
+
+```
+str.padEnd(targetLength [, padString])
+```
+
+例子：
+
+```ts
+'abcd'.padEnd(10, '012') // => abcd012012
+'abcd'.padEnd(9, '012') // => abcd01201
+'abcd'.padEnd(3, '012') // => abcd
+```
 
 ## 增强 Unicode 表示法
 
@@ -46,7 +127,8 @@ JavaScript 允许采用 `\uxxxx` 形式表示一个字符，其中 `xxxx` 表示
 // " 7"
 ```
 
-上面代码表示，如果直接在 `\u` 后面跟上超过 `0xFFFF` 的数值（比如 `\u20BB7`），JavaScript 会理解成 `\u20BB+7`。由于 `\u20BB` 是一个不可打印字符，所以只会显示一个空格，后面跟着一个7。
+上面代码表示，如果直接在 `\u` 后面跟上超过 `0xFFFF` 的数值（比如 `\u20BB7`），JavaScript 会理解成 `\u20BB+7`。
+由于 `\u20BB` 是一个不可打印字符，所以只会显示一个空格，后面跟着一个7。
 
 ES6 对这一点做出了改进，只要将码点放入大括号，就能正确解读该字符。
 
@@ -81,7 +163,8 @@ hell\u{6F} // 123
 
 作用：**返回字符的正确码点的十进制，可以处理四字节存储的字符**
 
-JavaScript 内部，字符以 UTF-16 的格式储存，每个字符固定为2个字节。对于那些需要4个字节储存的字符（Unicode 码点大于 `0xFFFF` 的字符），JavaScript 会认为它们是两个字符。
+JavaScript 内部，字符以 UTF-16 的格式储存，每个字符固定为2个字节。对于那些需要4个字节储存的字符（Unicode 码点大于
+ `0xFFFF` 的字符），JavaScript 会认为它们是两个字符。
 
 ```js
 var s = "𠮷";
@@ -93,7 +176,9 @@ s.charCodeAt(0) // 55362
 s.charCodeAt(1) // 57271
 ```
 
-上面代码中，汉字“𠮷”（注意，这个字不是“吉祥”的“吉”）的码点是 `0x20BB7`，UTF-16 编码为`0xD842 0xDFB7`（十进制为`55362 57271`），需要 4 个字节储存。对于这种 4 个字节的字符，JavaScript 不能正确处理，字符串长度会误判为 2，而且 charAt 方法无法读取整个字符，charCodeAt 方法只能分别返回前两个字节和后两个字节的值。
+上面代码中，汉字“𠮷”（注意，这个字不是“吉祥”的“吉”）的码点是 `0x20BB7`，UTF-16 编码为`0xD842 0xDFB7`（十进制为
+`55362 57271`），需要 4 个字节储存。对于这种 4 个字节的字符，JavaScript 不能正确处理，字符串长度会误判为 2，而且
+ charAt 方法无法读取整个字符，charCodeAt 方法只能分别返回前两个字节和后两个字节的值。
 
 **ES6 提供了 `codePointAt` 方法，能够正确处理 4 个字节储存的字符，返回一个字符的码点**。
 
@@ -106,7 +191,8 @@ s.codePointAt(1) // 57271
 s.codePointAt(2) // 97
 ```
 
-总之，`codePointAt` 方法会正确返回 32 位的 UTF-16 字符的码点。对于那些两个字节储存的常规字符，它的返回结果与 `charCodeAt` 方法相同。
+总之，`codePointAt` 方法会正确返回 32 位的 UTF-16 字符的码点。对于那些两个字节储存的常规字符，它的返回结果与
+`charCodeAt` 方法相同。
 
 **`codePointAt` 方法返回的是码点的十进制值**，如果想要十六进制的值，可以使用 `toString(16)` 方法转换一下。
 
@@ -117,7 +203,9 @@ s.codePointAt(0).toString(16) // "20bb7"
 s.codePointAt(2).toString(16) // "61"
 ```
 
-你可能注意到了，`codePointAt` 方法的参数，仍然是不正确的。比如，上面代码中，字符a在字符串s的正确位置序号应该是 1，但是必须向 `codePointAt` 方法传入 2。解决这个问题的一个办法是使用 `for...of` 循环，因为它会正确识别 32 位的 UTF-16 字符。
+你可能注意到了，`codePointAt` 方法的参数，仍然是不正确的。比如，上面代码中，字符a在字符串s的正确位置序号应该是 1，
+但是必须向 `codePointAt` 方法传入 2。解决这个问题的一个办法是使用 `for...of` 循环，因为它会正确识别 32 位的
+UTF-16 字符。
 
 ```js
 let s = '𠮷a';
@@ -144,7 +232,8 @@ is32Bit("a") // false
 作用：**根据码点返回字符，可以返回大于 0xFFFF 的字符**
 
 
-ES6 提供了 `String.fromCodePoint` 方法，可以识别大于 `0xFFFF` 的字符，弥补了`String.fromCharCode` 方法的不足。在作用上，正好与 `codePointAt` 方法相反。
+ES6 提供了 `String.fromCodePoint` 方法，可以识别大于 `0xFFFF` 的字符，弥补了`String.fromCharCode` 方法的不足。
+在作用上，正好与 `codePointAt` 方法相反。
 
 ```js
 String.fromCharCode(0x20BB7)
@@ -206,7 +295,7 @@ matchAll 方法返回一个正则表达式在当前字符串的所有匹配，�
 
 ## Unicode 正规化
 
-ES6 提供字符串实例的normalize()方法，用来将字符的不同表示方法统一为同样的形式，这称为 Unicode 正规化。
+ES6 提供字符串实例的 `normalize()` 方法，用来将字符的不同表示方法统一为同样的形式，这称为 Unicode 正规化。
 
 ```js
 '\u01D1'==='\u004F\u030C' // 这两个是同一个字符，但是返回 false
@@ -254,7 +343,7 @@ function SaferHTML(templateData) {
 i18n`Welcome to ${siteName}, you are visitor number ${visitorNumber}!`
 ```
 
-模板字符串本身并不能取代 Mustache 之类的模板库，因为没有条件判断和循环处理功能，但是通过标签函数，你可以自己添加这些功能。
+模板字符串本身并不能取代 Mustache 之类的模板库，因为没有条件判断和循环处理功能，但是通过标签函数，可以自己添加这些功能。
 
 ```js
 // 下面的hashTemplate函数

@@ -10,12 +10,34 @@ Angular 有一个概念叫做视图（View），视图由其引用对象（ViewR
 >
 > Properties of elements in a View can change, but the structure (number and order) of elements in a View cannot. Changing the structure of Elements can only be done by inserting, moving or removing nested Views via a {@link ViewContainerRef}. Each View can contain many View Containers.
 
-也就是说，视图是应用UI的构建单元，里边的元素需要一同创建或者一同销毁。可以更改视图中元素的属性，但是如果要改变元素的数量和顺序，就只有通过视图容器（ViewContainerRef）进行插入、移动、移除等操作来实现。
+也就是说，视图是应用UI的构建单元，里边的元素需要一同创建或者一同销毁。可以更改视图中元素的属性，但是如果要改变元素的数量和顺序，就只有通过视图容器（ViewContainerRef）进行插入、移动、移除等操作来实现。每个视图能够包含多个视图容器。
+
+例如下边的模板：
+
+```html
+Count: {{items.length}}
+<ul>
+  <ng-template ngFor let-item [ngForOf]="items"></ng-template>
+</ul>
+```
+
+会编译成：
+
+```html
+ <!-- ViewRef: outer-0 -->
+ Count: 2
+ <ul>
+   <ng-template view-container-ref></ng-template>
+   <!-- ViewRef: inner-1 --><li>first</li><!-- /ViewRef: inner-1 -->
+   <!-- ViewRef: inner-2 --><li>second</li><!-- /ViewRef: inner-2 -->
+ </ul>
+ <!-- /ViewRef: outer-0 -->
+```
 
 视图又分为两种具体的类型：
 
-- 一种是与模板（ng-template）关联的 embedded view
-- 另一种是与组件关联的 host view
+- 一种是与模板（ng-template）关联的 **embedded view**
+- 另一种是与组件关联的 **host view**
 
 ## 定义动态组件插入位置
 
@@ -126,6 +148,17 @@ class NgTemplateOutletCompleteExample {
     this.myInjector = ReflectiveInjector.resolveAndCreate([Greeter], injector);
   }
 }
+```
+
+另外，可以直接使用 `ViewContainerRef` 对象的 `createComponent` 方法来动态创建组件。
+
+```ts
+let componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
+let viewContainerRef = this.adHost.viewContainerRef; // adHost is <ng-template>
+viewContainerRef.clear();
+
+let componentRef = viewContainerRef.createComponent(componentFactory);
+(<AdComponent>componentRef.instance).data = adItem.data;
 ```
 
 ## 参考资料

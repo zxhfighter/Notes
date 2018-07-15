@@ -2,7 +2,8 @@
 
 Babel 是一个广泛使用的 ES6 转码器，可以将 ES6 代码转为 ES5 代码，从而在现有浏览器环境执行。
 
-Babel 需要配置文件 `.babelrc`（如果使用命令，也需要将配置选项当做参数传入），规定对哪些规则进行转码，一般包括 'presets' 和 'plugins'。
+Babel 需要配置文件 `.babelrc`（如果使用命令，也需要将配置选项当做参数传入），规定对哪些规则进行转码，一般包括
+'presets' 和 'plugins'。
 
 - presets：规则集，可选 'latest', 'state-0', 'react' 等等，是一系列 plugins
 - plugins：插件列表，例如 'transform-es2015-arrow-functions', 'react-jsx' 等等
@@ -12,9 +13,11 @@ Babel 需要配置文件 `.babelrc`（如果使用命令，也需要将配置选
 ```json
 {
   "env": {
+    // 生成环境
     "production": {
       "plugins": ["transform-react-constant-elements"]
     },
+    // 开发环境
     "development": {
       "presets": ["stage-0"]
     }
@@ -22,7 +25,8 @@ Babel 需要配置文件 `.babelrc`（如果使用命令，也需要将配置选
 }
 ```
 
-其中的 `env` 选项的值将从 `process.env.BABEL_ENV` 获取，如果没有的话，则获取 `process.env.NODE_ENV` 的值，它也无法获取时会设置为 "development" 。
+其中的 `env` 选项的值将从 `process.env.BABEL_ENV` 获取，如果没有的话，则获取 `process.env.NODE_ENV` 的值，
+它也无法获取时会设置为 "development" 。
 
 `env` 的设置可以使用 `cross-env` 等 npm 包来设置，屏蔽不同操作系统设置环境变量的差异。
 
@@ -48,7 +52,8 @@ $ babel-node
 
 ### babel-register
 
-改写 `require()` 命令，每当使用 `require()` 加载 `.js`, `.jsx`, `.es6` 等后缀名的文件时，会先调用 Babel 进行实时转码。
+改写 `require()` 命令，每当使用 `require()` 加载 `.js`, `.jsx`, `.es6` 等后缀名的文件时，会先调用 Babel
+进行实时转码。
 
 ```
 $ npm install --save-dev babel-register
@@ -98,7 +103,9 @@ babel.transformFromAst(ast, code, options);
 
 ### babel-polyfill
 
-babel 默认只转化新的 JavaScript 句法（例如箭头函数，解构等），而不转化新的对象，比如 Iterator，Map，Set，Reflect，Proxy，Promise，Symbol 等，以及一些对象的方法，例如 `Object.assign`，`Array.from`，`String.padStart` 等。
+babel 默认只转化新的 JavaScript 句法（例如箭头函数，解构等），而不转化新的对象以及API，比如 Iterator，Map，
+Set，Reflect，Proxy，Promise，Symbol 等，以及一些对象的方法，例如 `Object.assign`，`Array.from`，
+`String.padStart` 等。
 
 安装命令如下：
 
@@ -115,11 +122,48 @@ import 'babel-polyfill';
 require('babel-polyfill');
 ```
 
-**由于 babel 默认不转码的 API 非常多，因此该文件体积很大，推荐使用 core-js，按需引入（看了下，其实底层引入的就是 [core-js](https://github.com/zloirock/core-js) 和 [regenerator](https://facebook.github.io/regenerator/)）。**
+结合 webpack 使用时，配置 entry 如下：
+
+```ts
+module.exports = {
+  entry: ["babel-polyfill", "./app/js"]
+};
+```
+
+**由于 babel 默认不转码的 API 非常多，因此该文件体积很大，推荐使用 core-js，按需引入（其是 babel-polyfill 底层
+引入的就是 [core-js](https://github.com/zloirock/core-js) 和
+[regenerator](https://facebook.github.io/regenerator/)）。**
 
 ```js
 import 'core-js/es6/reflect';
 import 'core-js/es7/reflect';
+```
+
+## babel-plugin-transform-runtime
+
+转码的过程中会生成一些帮助函数，例如 `_extend`，如果每个转码文件都生成，会造成浪费；另外，如果你开发库，依赖 Promise
+, Set, Map 等数据结构，如果使用 `babel-polyfill` 等库，会污染全局的 Promise 等对象。
+
+因此 `transform-runtime` 插件用于解决上述两个问题：提供公共帮助文件以及提供 Promise 等对象的沙箱环境。
+
+```ts
+{
+  "plugins": [
+    ["transform-runtime", {
+      // true，提取帮助函数到公共文件
+      "helpers": false,
+
+      // true，引入沙箱的 Promise 等对象
+      "polyfill": false,
+
+      // true，引入沙箱的相关生成器对象
+      "regenerator": true,
+
+      // 引入对象时的模块名，例如 import extends from 'flavortown/runtime/helpers/extends';
+      "moduleName": "flavortown/runtime"
+    }]
+  ]
+}
 ```
 
 ### eslint + babel

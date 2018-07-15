@@ -8,7 +8,20 @@
 
 - 不存在变量提升（variable hoisting）
 - 变量必须先定义后使用
-- 变量（在当前作用域）不能重复定义
+- 变量（在当前作用域）不能重复定义，因此不能在函数内部重新声明参数
+
+```ts
+function func(arg) {
+  let arg; // 报错
+}
+
+function func(arg) {
+  {
+    let arg; // 不报错
+  }
+}
+```
+
 - 暂时性死区（块级作用域中出现 let 或 const，则该作用域为暂时性死区）
 - 块级作用域（可以在块级作用域中定义函数了，此函数在当前作用域也会存在提升）
 
@@ -23,11 +36,25 @@
 } // 此块级作用域运行后，返回函数 a
 ```
 
-- typeof 不一定返回字符串，可能会抛出 ReferenceError 异常
+- 在 for 循环中使用 let 时，需要注意，就是设置循环变量的那部分是一个父作用域，而循环体内部是一个单独的子作用域。
+
+```ts
+for (let i = 0; i < 10; i++) {
+
+    // 如果在同一个作用域，是无法重复声明的，会报 SyntaxError
+    let i = 'abc';
+    console.log('abc');
+}
+```
+
+- typeof 不一定返回字符串，可能会抛出 ReferenceError 异常，因为在使用 let 命令声明变量之前，该变量都是不可用的，
+形成了暂时性死区
 
 ```js
-typeof x; // => ReferenceError
-let x;
+{
+    typeof x; // => ReferenceError
+    let x;
+}
 ```
 
 - const 和 readonly 的区别，const 用于声明变量，readonly 来修饰类的属性（typescript 中）
@@ -38,8 +65,9 @@ class A {
     readonly name = 'a';
 }
 ```
-- const 命令声明就必须初始化，const 锁定的是引用，所以对象和数组可以更改其中内容
-- 如何将一个对象的本身和递归属性全部冻结？
+
+- const 命令声明就必须初始化，const 锁定的是对象引用，所以对象和数组可以更改其中内容
+- 如何将一个对象的本身和递归属性全部冻结（也即无法修改）？
 
 ```js
 const constantize = obj => {

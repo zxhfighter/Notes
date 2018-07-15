@@ -6,7 +6,7 @@ ES6 允许按照一定模式，从数组和对象中提取值，对变量进行�
 
 ## 模式匹配
 
-解构按照 "模式匹配" 来解构。
+解构按照 "模式匹配(pattern)" 来解构。
 
 ```js
 let [foo, [[bar], baz]] = [1, [[2], 3]];
@@ -33,7 +33,7 @@ z // []
 
 ## 解构的实质
 
-**如果等号右边的对象（或者转化后的对象）不具有 `Symbol.iterator` 接口，那么解构会报错。**
+**如果等号右边的对象（或者转化后的对象）不具有 `Symbol.iterator` 接口（即不可迭代），那么解构会报错。**
 
 ```js
 // 报错
@@ -45,9 +45,9 @@ let [foo] = null;
 let [foo] = {};
 ```
 
-上面的语句都会报错，因为等号右边的值，要么转为对象以后不具备 Iterator 接口（前五个表达式），要么本身就不具备 Iterator 接口（最后一个表达式）。
+上面的语句都会报错，因为等号右边的值，要么本身就不可迭代（最后一个表达式），要么转为对象以后不可迭代（前五个表达式）。
 
-事实上，只要某种数据结构具有 Iterator 接口，都可以采用数组形式的解构赋值。
+事实上，只要某种数据结构具有迭代器接口，都可以采用数组形式的解构赋值。
 
 ```js
 let [x, y, z] = new Set(['a', 'b', 'c']);
@@ -56,12 +56,12 @@ let [g, h, i] = 'ghi';
 function* fibs() {
   let [a, b] = [0, 1];
   while (true) {
-    yield a;
+    yield b;
     [a, b] = [b, a + b];
   }
 }
 
-// 使用 generator 函数来结构
+// 使用 generator 函数来解构
 let [first, second, third, fourth, fifth, sixth] = fibs();
 sixth // 5
 ```
@@ -138,7 +138,7 @@ let { foo: baz } = { foo: 'aaa', bar: 'bbb' };
 
 ## 遍历 Map
 
-可以用解构轻松来遍历 Map。
+可以用解构轻松来遍历 Map（也即解构常用在 for...of 中）。
 
 ```js
 for (let [key, value] of map) {

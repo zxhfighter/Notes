@@ -13,5 +13,3 @@
 ## 如何在 typescript 中使用 import 导入类似 moment 以及 echarts 没有 default export 的库？
 
 ## tsc 编译和 ngc 编译有什么区别?
-
-

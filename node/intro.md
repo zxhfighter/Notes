@@ -1,4 +1,4 @@
-# Node 入门简介
+# Node 简介
 
 [TOC]
 
@@ -6,7 +6,7 @@
 
 Node 可以从 [https://nodejs.org/en/download/](https://nodejs.org/en/download/) 下载安装包，按照提示安装即可。
 
-Node 版本分为 LTS（Long Term Support） 版本和 Current 版本，LTS 版本比较稳定，Current 版本则包括了一些比较新的功能。
+Node 版本分为 LTS（Long Term Support） 长期维护版本和 Current 版本，LTS 版本比较稳定，Current 版本则包括了一些比较新的功能。
 
 Node 会自带一个包管理器 npm。
 
@@ -32,7 +32,7 @@ $ node
 > require('http')
 ```
 
-不进入 REPL 查看 Node 中对象。
+不进入 REPL，查看 Node 中对象。
 
 ```
 $ node -p 'require("http")'
@@ -53,7 +53,7 @@ $ node --v8-options | grep 'in progress'
 $ node --v8-options | grep 'harmony'
 ```
 
-在 harmony 模式下运行脚本（即已经完成但是还没有纳入标准的规范，例如 decorator）。
+在 harmony 模式下运行脚本（即已经完成但是还没有纳入标准的 staged 规范，例如 decorator）。
 
 ```
 $ node --harmony app.js
@@ -63,6 +63,12 @@ $ node --harmony app.js
 
 ```
 $ node --inspect app.js
+```
+
+如果想第一次启动脚本就暂停，可以使用：
+
+```
+$ node --inspect-brk app.js
 ```
 
 升级自带的 npm 版本。
@@ -104,7 +110,7 @@ $ n 8.11.1
   ο node/8.11.1
 ```
 
-使用 `n rm` 移除某个特定版本。
+使用 `n rm` 移除某个特定版本，快捷方式为 `n -`。
 
 ```
 $ n rm 0.9.4 v0.10.0
@@ -132,9 +138,9 @@ V8 引擎依赖 ECMAScript 标准，Node 则依赖 V8 引擎。
 
 ## Node C/C++ 扩展
 
-Node 本身是由 C/C++ 编写而成的，内置模块也是，例如 `http`，`fs` 模块。
+Node 本身是由 `C/C++` 编写而成的，内置模块也是，例如 `http`，`fs` 模块。
 
-因此如果你对 C/C++ 比较熟悉，也可以使用 C/C++ 扩展来编写 Node 的模块（称为 add-on），不过也需要对 `V8`，`libuv`，`Internal Node.js libraries`，`OpenSSL` 等知识比较了解。
+因此如果你对 `C/C++` 比较熟悉，也可以使用 `C/C++` 扩展来编写 Node 的模块（称为 add-on），不过也需要对 `V8`，`libuv`，`Internal Node.js libraries`，`OpenSSL` 等知识比较了解。
 
 具体可以参见 [Hello, World Add-On](https://nodejs.org/dist/latest-v8.x/docs/api/addons.html)。
 
@@ -142,9 +148,9 @@ Node 本身是由 C/C++ 编写而成的，内置模块也是，例如 `http`，`
 
 ### global
 
-Node 中的全局对象为 `global`。
+Node 中的全局对象为 `global`，浏览器宿主中的全局对象为 `window`。
 
-浏览器中的全局对象 `window` 不一样，如果变量是在顶层环境使用 `var` 定义，那么该变量会成为 `window` 对象的一个属性。
+两者的差异，如果变量在浏览器顶层环境使用 `var` 定义，那么该变量会成为 `window` 对象的一个属性，而 Node 中则是局部变量。
 
 ```
 > var a = 1
@@ -173,6 +179,7 @@ undefined
 `process` 对象关联了当前的标准输入输出（I/O），并且可以发送信号给事件循环退出循环。
 
 ```
+> process.pid
 > process.env.PATH
 > process.versions
 > process.stdin
@@ -213,21 +220,36 @@ process.stdin.on('readable', function() {
 > process.exit(1)
 ```
 
-## Node 中二进制数据处理
+## 二进制数据处理
 
-JavaScript 在 ES6 之前并没有操作二进制数据流相关机制，后来由于 WebSockets，Canvas，WebGL 等技术的出现，在 ES6 中引入了 `ArrayBuffer` 对象和 `TypedArray` 视图。
+JavaScript 在 ES6 之前并没有操作二进制数据流相关机制，后来由于 WebSockets，Canvas，WebGL 等技术的出现，在 ES6 中引入了 `ArrayBuffer` 对象和 `TypedArray`、`DataView` 等视图。
 
 此时，在 Node 中已经自己实现了一个 `Buffer` 类用来处理二进制数据流，例如 TCP 流和文件流。
 
 `Buffer` 类实现了 `TypedArray` 视图中的 `Uint8Array` API，不过针对 Node 环境额外进行了优化。
 
-## Node 中的事件循环和计时器
+## 事件循环和计时器
 
 Node 和浏览器都使用了 V8 引擎，但是宿主环境不一样了，因此都实现了自己的事件循环，相比浏览器，Node 中的事件循环更为复杂。
 
-另外，Node 中的定时器和浏览器中的也略有差别，Node 中的计时器新增了两个方法 `ref()` 和 `unref()`，另外，新增了 `setImmediate()` 和 `clearImmediate()` 方法。
+另外，Node 中的定时器和浏览器中的也略有差别，Node 中的计时器新增了两个方法 `ref()` 和 `unref()`。另外，新增了 `setImmediate()` 和 `clearImmediate()` 方法。
 
 另外，可以用 `process.nextTick()` 来保证当前事件循环清空时立即执行。
 
-## Node 中的回调函数格式和异常处理
+【补充 Node 中和浏览器中事件循环的差异】
 
+https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/
+
+
+## 回调函数格式和异常处理
+
+健壮的程序少不了对异常的处理，由于 Node 是基于事件驱动和非阻塞I/O，因此异步操作都需要一个回调函数来异步处理，同时传统的 try...catch 方式无法捕获异步异常，需要在回调函数中将异常传递出来，因此 Node 约定：
+
+- 回调函数必须为异步操作的最后一个参数
+- 回调函数的第一个参数必须为错误信息，如果为空返回 null，否则返回特定 Error 对象，其次才返回具体的数据
+
+```ts
+fs.readFile('file.txt', 'utf-8', (err, data) => {
+
+});
+```

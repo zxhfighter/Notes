@@ -110,3 +110,8 @@ git checkout v1^2 # parent of parent of v1
 git tag -d list
 ```
 
+## revert vs reset vs checkout vs rebase
+
+
+
+

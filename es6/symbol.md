@@ -90,3 +90,21 @@ myIterable[Symbol.iterator] = function* () {
 // for...of 或扩展运算符会调用 Symbol.iterator 方法
 [...myIterable] // [1, 2, 3]
 ```
+
+另外一个例子，实现自定义对象的搜索功能。
+
+```ts
+class Product {
+  constructor(type) {
+    this.type = type;
+  }
+
+  [Symbol.search](str) {
+    return str.indexOf(this.type) >= 0 : 'FOUND' : 'NOT FOUND';
+  }
+}
+
+var soapObj = new Product('soap');
+'mysoap'.search(soapObj);
+'shampoo'.search(soapObj);
+```

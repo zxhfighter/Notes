@@ -1,5 +1,92 @@
 # RxJS 6
 
+## What's New In 5.5
+
+before 5.5.
+
+```ts
+import { Observable } from 'rxjs/Observable';
+
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+
+Observable.of(1, 2, 3)
+  .filter(x => x % 2 === 0)
+  .map(x => x + x)
+  .subscribe(console.log);
+```
+
+patching prototype comes whit a lot of problems:
+
+- it's global(隐形依赖)
+- not tree-shakable
+- trampling
+
+so in 5.5.
+
+```ts
+import of from 'rxjs/observable/of';
+import { filter, map } from 'rxjs/operators';
+
+of(1, 2, 3).pipe(
+  filter(x => x % 2 === 0),
+  map(x => x + x)
+).subscribe(console.log);
+```
+
+and more advatanges:
+
+- custom operators are much easier to make
+- compilers and linters offer more help now
+
+```ts
+const pow = (p: number) =>
+  (source: Observable<number>) =>
+    source.pipe(map(n => n ** p));
+
+source$.pipe(
+  filter(x => x > 100),
+  pow(3)
+).subscribe(console.log);
+```
+
+## What's new in 6.0
+
+- new unhandled error behavior（sync -> async）, producer interference problem
+
+```ts
+try {
+  badSource$.subscribe(nextFn, null, completeFn);
+} catch (err) {
+  // async err cannot be caught
+  handleError(err);
+}
+```
+
+to:
+
+```ts
+badSource$.subscribe(nextFn, handleError, completeFn)
+```
+
+- simplified imports
+
+type or scheduler or creation methods or helpers from `rxjs`, operators from `rxjs/operators`。
+
+- deprecations(and removals)
+- a new operator
+
+how to solve this?
+
+```ts
+setTimeout(() => { throw error; }, 0)
+```
+
+will not bubble up to any try...catch, and to window.onerror or process.on('error').
+
+
+
 ## Install
 
 ```shell
