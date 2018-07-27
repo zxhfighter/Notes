@@ -55,6 +55,8 @@ f() // 1
 
 在参数作用域，没有找到 x，因此使用了全局的 x 值，注意下边的 let 定义是不会提升的。
 
+最后，出现默认参数值以后，arguments 对象与原来不同，之前函数命名参数的变化会体现到 arguments 对象中，而现在不会（严格模式中）。
+
 ## rest 参数
 
 ES6 引入 rest 参数（形式为 `...变量名`），用于获取函数的多余参数，这样就不需要使用 arguments 对象了。rest 参数搭配
@@ -288,3 +290,54 @@ Fibonacci2(10000) // Infinity
 ECMAScript 的实现，都必须部署“尾调用优化”。这就是说，ES6 中只要使用尾递归，就不会发生栈溢出，相对节省内存。
 
 那么问题来了，如何将递归改成尾递归，是否所有递归都能改成尾递归呢？
+
+尾递归的实现，往往需要改写递归函数，确保最后一步只调用自身。做到这一点的方法，就是把所有用到的内部变量改写成函数的参数。
+
+两个方法可以解决这个问题。方法一是在尾递归函数之外，再提供一个正常形式的函数。
+
+```ts
+function tailFactorial(n, total) {
+  if (n === 1) return total;
+  return tailFactorial(n - 1, n * total);
+}
+
+function factorial(n) {
+  return tailFactorial(n, 1);
+}
+
+factorial(5) // 120
+```
+
+函数式编程有一个概念，叫做柯里化（currying），意思是将多参数的函数转换成单参数的形式。这里也可以使用柯里化。
+
+```ts
+function currying(fn, n) {
+  return function (m) {
+    return fn.call(this, m, n);
+  };
+}
+
+function tailFactorial(n, total) {
+  if (n === 1) return total;
+  return tailFactorial(n - 1, n * total);
+}
+
+const factorial = currying(tailFactorial, 1);
+
+factorial(5) // 120
+```
+
+第二种方法就简单多了，就是采用 ES6 的函数默认值。
+
+```ts
+function factorial(n, total = 1) {
+  if (n === 1) return total;
+  return factorial(n - 1, n * total);
+}
+
+factorial(5) // 120
+```
+
+总结一下，递归本质上是一种循环操作。纯粹的函数式编程语言没有循环操作命令，所有的循环都用递归实现，这就是为什么尾递归对
+这些语言极其重要。对于其他支持“尾调用优化”的语言（比如 Lua，ES6），只需要知道循环可以用递归代替，而一旦使用递归，就最
+好使用尾递归。

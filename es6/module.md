@@ -2,7 +2,8 @@
 
 ## ES6 Module 制定原因
 
-JavaScript 一直没有模块体系，ES6 之前社区制定了一些模块加载方案，主要的有 CommonJS 和 AMD 两种，前者用于服务器，后者用于浏览器。
+JavaScript 一直没有模块体系，ES6 之前社区制定了一些模块加载方案，主要的有 CommonJS 和 AMD 两种，前者用于服务器，
+后者用于浏览器。
 
 ES6 在语言标准的层面上，实现了模块功能，完全可以取代 CommonJS 和 AMD 规范，成为浏览器和服务器通用的模块解决方案。
 
@@ -10,15 +11,16 @@ ES6 在语言标准的层面上，实现了模块功能，完全可以取代 Com
 
 ### 1.编译时加载和运行时加载的区别
 
-ES6 模块的思想是尽量的**静态化**，在**编译阶段就确定模块的依赖关系**，以及输入输出的变量。
+ES6 模块的思想是尽量的 **静态化**，在 **编译阶段就确定模块的依赖关系**，以及输入输出的变量。
 
-而 CommonJS 和 AMD 模块，都只能在**运行时确定依赖**，称之为**运行时加载**，因为只有运行时才能得到这个对象，导致完全没办法在编译时做“静态优化”。
+而 CommonJS 和 AMD 模块，都只能在**运行时确定依赖**，称之为**运行时加载**，因为只有运行时才能得到这个对象，导致完
+全没办法在编译时做静态优化。
 
 ### 2.输出值是实时值还是缓存值的区别
 
 ES6 中 export 语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值。
 
-CommonJS 模块输出的是值的缓存，不存在动态更新。
+CommonJS 模块输出的是值的缓存（模块缓存 require.caches），不存在动态更新。
 
 ```js
 export var foo = 'bar';
@@ -101,14 +103,14 @@ if (x === 1) {
 }
 ```
 
-另外，import 命令具有提升效果，会提升到整个模块的头部，首先执行。
+另外，_import 命令具有提升效果_，会提升到整个模块的头部，首先执行。
 
 ```js
 foo();
 import { foo } from 'my_module';
 ```
 
-如果多次重复执行同一句 import 语句，那么只会执行一次，而不会执行多次。
+如果 _多次重复执行同一句 import 语句，那么只会执行一次_，而不会执行多次。
 
 ```js
 import { foo } from 'my_module';
@@ -127,7 +129,9 @@ const echarts = echartsLib.default ? echartsLib.default : echartsLib;
 
 ## 注意
 
-This feature is only just beginning to be implemented in browsers natively at this time. It is implemented in many transpilers, such as TypeScript and Babel, and bundlers such as Rollup, Webpack and Parcel.
+This feature is only just beginning to be implemented in browsers natively at this time. It is
+implemented in many transpilers, such as TypeScript and Babel, and bundlers such as Rollup, Webpack
+and Parcel.
 
 ## 参考资料
 

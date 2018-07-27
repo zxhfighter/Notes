@@ -2,7 +2,7 @@
 
 ## 如何使 ts-node 支持引用 compileOptions 中的 paths 映射
 
-## 如何是IDE不报修饰器的警告提示
+## 如何使IDE不报修饰器的警告提示
 
 ## 如何使IDE不类型检测和 lint 检测 node_modules 的类型，以便提高性能
 

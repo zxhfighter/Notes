@@ -1,5 +1,15 @@
 # typescript 源码分析
 
+## 分析过程
+
+```
+SourceCode ~~ scanner ~~> Token Stream
+Token Stream ~~ parser ~~> AST
+AST ~~ binder ~~> Symbols
+AST + Symbols ~~ checker ~~> Type Validation
+AST + Checker ~~ emitter ~~> JS
+```
+
 核心对象。
 
 ## TextRange
@@ -8,20 +18,30 @@
 
 ```ts
 interface TextRange {
+    // 开始位置
     pos: number;
+
+    // 结束位置
     end: number;
 }
 ```
 
 ## Node
 
-代表 AST 中的一个节点。
+代表 AST 中的一个节点，每个节点有：
+
+- 节点类型：kind
+- 位置信息：（pos: 开始位置，end: 结束位置，由 TextRange 提供）
+- 父节点(parent)
+- 可选修饰器(decorators)
+- 节点特征(let const, export)
+- 节点修饰符(public, async, const)
 
 ```ts
 interface Node extends TextRange {
 
-    // 节点类型，例如 EOF 标记，字符串常量，分号标记，逗号标记，
-    // 双等号标记，Import 关键字，构造函数，CallExpression等
+    // 节点类型，例如 EOF 标记，字符串常量，分号标记，逗号标记，行内注释，块级注释
+    // 双等号标记，Import 关键字，构造函数，CallExpression 等
     kind: SyntaxKind;
 
     // 节点特征，例如 Let、Const、ExportContext，ThisNodeHasError 等等
@@ -40,11 +60,12 @@ interface Node extends TextRange {
 
 ## SourceFile
 
-代表了一个 TypeScript 文件，常见属性如下：
+代表了一个 TypeScript 文件，同时也是 AST 树的顶级节点，常见属性如下：
 
-- fileName
-- text
-- moduleName
+- fileName：文件名
+- text：文件内容
+- moduleName：模块名
+- statements：所有语句 Statement
 
 ```ts
 interface Declaration extends Node {
@@ -78,7 +99,7 @@ interface SourceFile extends Declaration {
 
 ## Bundle
 
-多个 SourceFile 数组。
+- sourceFiles：SourceFile 数组。
 
 ```ts
 interface Bundle extends Node {
@@ -88,6 +109,8 @@ interface Bundle extends Node {
 ```
 
 ## ScriptReferenceHost
+
+脚本宿主环境。
 
 ```ts
 interface ScriptReferenceHost {
@@ -99,6 +122,14 @@ interface ScriptReferenceHost {
 ```
 
 ## Program
+
+程序。
+
+```ts
+Program -uses-> CompilerHost -uses-> System
+```
+
+包含多个 SourceFile，有 `emit()` 方法生成对应的 JS 和 声明文件。
 
 ```ts
 interface Program extends ScriptReferenceHost {
@@ -134,7 +165,16 @@ interface Program extends ScriptReferenceHost {
 }
 ```
 
+创建一个 Program 并输出相应的编译文件。
+
+```ts
+let program = ts.createProgram(fileNames, compilerOptions);
+let emitResult = program.emit();
+```
+
 ## TypeFlags
+
+类型标志。
 
 ```ts
 enum TypeFlags {
@@ -189,11 +229,17 @@ enum TypeFlags {
 
 ```ts
 ts.forEachChild(node, childNode => {
+    if (!childNode) {
+        return;
+    }
+
     foundNode = foundNode || findNode(childNode, kind, text);
 });
 ```
 
 ## createSourceFile
+
+构建一个 SourceFile。
 
 ```ts
 function createSourceFile(
@@ -206,6 +252,8 @@ function createSourceFile(
 ```
 
 ## updateSourceFile
+
+更新一个 SourceFile。
 
 ```ts
 function updateSourceFile(
@@ -222,10 +270,135 @@ function updateSourceFile(
 
 ## Diagnostics
 
+诊断信息。
 
+## Trivia
+
+代码中不重要的信息，例如 空格、注释以及冲突的标记等等，AST 为了精简不存储这些信息，不过这些信息可以用 `ts.*` API来获取。例如 `ts.getLeadingCommentRanges` 和 `ts.getTrailingCommentRanges`。
+
+另外需要注意不重要信息的归属问题（属于哪个 Token），同一行的属于当前 Token，从下一行开始属于下一个 Token。
+
+
+## 转化 AST
+
+使用 `ts.transform(sourceFile, [transformer])` 来进行 AST 节点转化。
+
+```ts
+const result: ts.TransformationResult<ts.SourceFile> = ts.transform(
+  sourceFile, [ transformer ]
+);
+
+const transformedSourceFile: ts.SourceFile = result.transformed[0];
+```
+
+其中相关接口定义如下：
+
+```ts
+function transform<T extends Node>(source: T | T[],
+    transformers: TransformerFactory<T>[],
+    compilerOptions?: CompilerOptions): TransformationResult<T>;
+
+type TransformerFactory<T extends Node> =
+    (context: TransformationContext) => Transformer<T>;
+
+type Transformer<T extends Node> = (node: T) => T;
+```
+
+使用 `ts.forEachChild` 来遍历 AST。使用 `ts.visitEachChild` 来遍历修改 AST。
+
+```ts
+function visitEachChild<T extends Node>(node: T,
+    visitor: Visitor,
+    context: TransformationContext): T;
+```
+
+The important thing to note here is that `visitEachChild` iterates over the children, but returns us the (possibly updated) node it is called on. First lets build up the stupidest transformer which simply logs the types of nodes it encounters:
+
+```ts
+const transformer = <T extends ts.Node>(context: ts.TransformationContext) =>
+        (rootNode: T) => {
+    function visit(node: ts.Node): ts.Node {
+        console.log("Visiting " + ts.SyntaxKind[node.kind]);
+        return ts.visitEachChild(node, visit, context);
+    }
+    return ts.visitNode(rootNode, visit);
+};
+```
+
+If I call this with input let x = n + 42; I get the result:
+
+```ts
+Visiting SourceFile
+Visiting VariableStatement
+Visiting VariableDeclarationList
+Visiting VariableDeclaration
+Visiting Identifier
+Visiting BinaryExpression
+Visiting Identifier
+Visiting FirstLiteralToken
+```
+
+We’ll apply this to a simple tree transformation, eliminating arithmetic expressions on constants to constants, i.e. replacing 2 + 2 with 4.
+
+```ts
+const transformer = <T extends ts.Node>(context: ts.TransformationContext) =>
+        (rootNode: T) => {
+    function visit(node: ts.Node): ts.Node {
+        if (node.kind === ts.SyntaxKind.BinaryExpression) {
+            const binary = node as ts.BinaryExpression;
+            if (binary.left.kind === ts.SyntaxKind.NumericLiteral
+              && binary.right.kind === ts.SyntaxKind.NumericLiteral) {
+                const left = binary.left as ts.NumericLiteral;
+                const leftVal = parseFloat(left.text);
+                const right = binary.right as ts.NumericLiteral;
+                const rightVal = parseFloat(right.text);
+                if (binary.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+                    return ts.createLiteral(leftVal + rightVal);
+                }
+            }
+        }
+        return ts.visitEachChild(node, visit, context);
+    }
+    return ts.visitNode(rootNode, visit);
+};
+```
+
+This seems to work! When run with input var x = 2 + 2;, it outputs var x = 4;. However, when run with var x = 1 + 2 + 3, it outputs var x = 3 + 3;. Run it a second time and it would simplify again, but what we want is a bottom-up recursive traversal. The fix is simple, first we transform the node by visiting the children, then construct the results (also catering for another couple of cases):
+
+```ts
+const transformer = <T extends ts.Node>(context: ts.TransformationContext) =>
+        (rootNode: T) => {
+    function visit(node: ts.Node): ts.Node {
+        node = ts.visitEachChild(node, visit, context);
+        if (node.kind === ts.SyntaxKind.BinaryExpression) {
+            const binary = node as ts.BinaryExpression;
+            if (binary.left.kind === ts.SyntaxKind.NumericLiteral
+              && binary.right.kind === ts.SyntaxKind.NumericLiteral) {
+                const left = binary.left as ts.NumericLiteral;
+                const leftVal = parseFloat(left.text);
+                const right = binary.right as ts.NumericLiteral;
+                const rightVal = parseFloat(right.text);
+                switch (binary.operatorToken.kind) {
+                    case ts.SyntaxKind.PlusToken:
+                        return ts.createLiteral(leftVal + rightVal);
+                    case ts.SyntaxKind.AsteriskToken:
+                        return ts.createLiteral(leftVal * rightVal);
+                    case ts.SyntaxKind.MinusToken:
+                        return ts.createLiteral(leftVal - rightVal);
+                }
+            }
+        }
+        return node;
+    }
+    return ts.visitNode(rootNode, visit);
+};
+```
 
 ## Reference
 
 - https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API
 - https://basarat.gitbooks.io/typescript/docs/compiler/overview.html
+- https://astexplorer.net/#/KJ8AjD6maa
 - https://ts-ast-viewer.com/
+- https://blog.scottlogic.com/2017/05/02/typescript-compiler-api-revisited.html
+- https://zhuanlan.zhihu.com/p/30360931

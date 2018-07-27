@@ -1,5 +1,12 @@
 # 字符串的扩展
 
+## Unicode
+
+ES6 之前，字符串一直基于 16位字符编码构建，每16位的序列是一个编码单元，代表一个字符，length 和 charAt 都是基于这种
+编码单元构建。
+
+如果限制到16位，不足以表示全球如此多的码位（code point），码位也是全球唯一标志符，从0开始，每个码位代表一个字符。
+
 ## 模板字符串
 
 模板字符串（template string）是增强版的字符串，用反引号（`）标识。它可以当作普通字符串使用，也可以用来定义多行字符串
@@ -303,6 +310,25 @@ ES6 提供字符串实例的 `normalize()` 方法，用来将字符的不同表�
 '\u01D1'.normalize() === '\u004F\u030C'.normalize() // 正规化后，返回 true
 ```
 
+如果你在开发一款国家化的应用，那么使用 normalize 可以使 **字符串的排序和比较标准化**。
+
+```ts
+values.sort((first, second) => {
+    let firstNorm = first.normalize('NFD');
+    let secondNorm = second.normalize('NFD');
+
+    if (firstNorm < secondNorm) {
+      return -1;
+    }
+    else if (firstNorm === secondNorm) {
+      return 0;
+    }
+    else {
+      return 1;
+    }
+});
+```
+
 ## 标签模板
 
 模板字符串可以跟在函数（标签）后边，形成标签模板。
@@ -312,8 +338,13 @@ const [a, b] = [5, 10];
 console.log`Hello ${a + b} world ${ a * b }`
 
 // 等价于调用，其中第一个参数数组还有一个 raw 属性，raw 里边会将 \n 变成 \\n
+// 也就是说，数组中的数组明文个数，总是会比占位符参数多一个，便于拼接字符串
+// function tag(literals, ...substitutions)，literals.length = substitutions.length + 1
 console.log(['Hello ', ' world ', ''], 15, 50)
 ```
+
+通过这种模式，可以将 literals 和 substitutions 两个数组交织在一起重组结果字符串，先取出 literals 中的首个元素，
+然后取出 substitutions 中的首个元素，交替继续取出每个元素，直到字符串拼接完成。
 
 “标签模板”的一个重要应用，就是过滤 HTML 字符串，防止用户输入恶意内容。
 
@@ -336,6 +367,30 @@ function SaferHTML(templateData) {
   return s;
 }
 ```
+
+更好的一种方式，不使用 arguments，如下：
+
+```ts
+function SaferHTML(literals, ...substitutions) {
+  let result = '';
+
+  // 根据 substitutions 的长度来确定循环次数
+  for (let i = 0; i < substitutions.length; i++) {
+    result += literals[i];
+    result += substitutions[i].replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+  }
+
+  // 合并最后一个 literal
+  result += literals[literals.length - 1];
+  return result;
+}
+
+let message = SaferHTML`<p>${sender} has sent you a message.</p>`;
+```
+
+很明显，上面代码的可读性更好。
 
 "标签模板" 的另一个应用，就是多语言转换（国际化处理）。
 
@@ -368,4 +423,51 @@ jsx`
       defaultValue='${this.state.value}' />
       ${this.state.value}
    </div>`
+```
+
+## 正则表达式 u 修饰符
+
+正则表达式增加了 u 修饰符，匹配时从编码单元操作模式切换到字符模式。
+
+```ts
+let text = '𠮷'
+console.log(text.length)
+console.log(/^.$/.test(text))
+console.log(/^.$/u.test(text))
+```
+
+由于 length 仍然依据 16 位编码单元计算，无法计算码位数量。计算码位数量如下。
+
+```ts
+function codePointLength(text) {
+  // 其中 [\s\S] 模式用于匹配新行
+  let result = text.match(/[\s\S]/gu);
+  return result ? result.length : 0;
+}
+
+console.log(codePointLength('abc'))
+console.log(codePointLength('𠮷bc'))
+```
+
+注意，使用正则，该方法效率低，推荐使用字符串迭代器 (for...of)。
+
+```ts
+const text = '𠮷bc';
+for (let c of text) {
+  console.log(c)
+}
+```
+
+最后，有的浏览器不支持 u 修饰符，可以使用如下函数检测。
+
+```ts
+function hasRegExpU() {
+  try {
+    var pattern = new RegExp('.', 'u');
+    return true;
+  }
+  catch (ex) {
+    return false;
+  }
+}
 ```

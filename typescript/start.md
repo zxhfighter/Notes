@@ -4,7 +4,7 @@
 
 使用 npm 安装 `typescript`，自带一个 `tsc` 命令，另外可以用 node 使用 `typescript` 相关 API。
 
-如果编译发现类型出错，如果没有设置 noEmitOrError，那么也会编译成功，会给出一个警告。
+如果编译出错，同时没有设置 noEmitOrError，那么也会编译成功，会给出一个警告。
 
 如果在类的构造函数中使用 public 或者 private 限定符，那么会创建一个对应的实例变量（Parameter properties are declared by prefixing a constructor parameter with an accessibility modifier or readonly, or both. Using private for a parameter property declares and initializes a private member; likewise, the same is done for public, protected, and readonly.）。
 
@@ -59,6 +59,8 @@ export default foo() {
 ## 关于 strictNullChecks
 
 默认情况下，null 和 undefined 为其他类型的子类型，如果 strictNullChecks 设置为 true，那么需要额外设置 null 和 undefined 类型。
+
+- string | undefined | null
 
 ## 定义接口
 
@@ -125,7 +127,7 @@ class P1 implements Point {
 }
 ```
 
-需要注意的是，一个类有两种类型：一种是静态端（例如类的构造函数，一些 static 方法），一种是实例端（对象实例化以后的，例如属性和方法），如果在接口中定义了构造函数签名（例如上面注释掉的 `new (...args: any[]);`），在类中实现时会报错。
+需要注意的是，一个类有两种类型：一种是静态端（例如类的构造函数，static 方法），一种是实例端（对象实例化以后的，例如属性和方法），如果在接口中定义了构造函数签名（例如上面注释掉的 `new (...args: any[]);`），在类中实现时会报错。
 
 这是因为当一个类实现一个接口时，只检测类的实例端，因为构造函数位于静态端，因此会报错。
 

@@ -1,0 +1,35 @@
+1. JavaScript 有哪些数据类型（包括 ES6，注意是否回答了 Symbol）？
+
+回答了 string, number, object，将 array 和 date 等也回答了，其余的不知道了。
+
+2. 写一个函数，判断变量是否是数组。
+
+脱口而出 typeof。
+使用原型 __prototype__ 来判断。
+instanceof 关键字是用来干嘛的，知道。
+
+3. 说一下 CommonJS 和 ES6 模块如何工作的，导入和导出？
+
+require/module.exports 但是不知道这是 commonjs 规范
+import/export，语法有什么区别，其余区别不知道。
+baidu
+4. 怎么设计一个 tip。
+
+不知道伪类，没有用过。
+:after
+:before
+
+5. 垂直居中
+
+position绝对定位
+table-cell
+ghost-inline-block
+flex
+
+6. 遍历一个树结构
+
+使用 children 的深度遍历回答出来了，但是改写成非递归的算法没有写出来
+
+7. 异步处理方式。
+
+callback, Promise

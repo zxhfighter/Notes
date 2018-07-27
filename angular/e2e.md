@@ -107,3 +107,18 @@ $ protractor conf.js
 ```
 1 test, 3 assertions, 0 failures
 ```
+
+
+## Setting Up the Selenium Server
+
+When working with Protractor, you need to specify how to connect to the browser drivers which will start up and control the browsers you are testing on.
+
+使用 Protractor 时，需要如何能够控制浏览器驱动器来执行测试（例如点击某个按钮，选择某项数据等）。
+
+You will most likely use the Selenium Server. The server acts as proxy between your test script (written with the WebDriver API) and the browser driver (controlled by the WebDriver protocols).
+
+可以使用 Selenium Server，它可以当做代理服务器，用来测试脚本和浏览器驱动之间的通信。
+
+The server forwards commands from your script to the driver and returns responses from the driver to your script. The server can handle multiple scripts in different languages. The server can startup and manage multiple browsers in different versions and implementations.
+
+     [Test Scripts] < ------------ > [Selenium Server] < ------------ > [Browser Drivers]

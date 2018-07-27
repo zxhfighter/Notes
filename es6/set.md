@@ -28,7 +28,7 @@ new Set([iterable])
 const items = new Set([1, 2, 3, 4, 5, 5, 5, 5]);
 items.size // => 5
 
-// 类数组也具有迭代器接口，因此也可以作为参数传入
+// 类数组也具有迭代器接口，因此也可以作为参数传入，这里的 NodeList 也可传入
 const set = new Set(document.querySelectorAll('div'));
 set.size // 56
 ```
@@ -75,7 +75,7 @@ set // => Set {NaN}
 
 ## 遍历 Set
 
-遍历 Set 有四种方式：
+遍历 Set 有四种方式（迭代器方法有三种：`keys`, `values`, `entries`）：
 
 ### `keys()`
 

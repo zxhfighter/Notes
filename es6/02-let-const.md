@@ -6,9 +6,9 @@
 
 ## 特点
 
-- 不存在变量提升（variable hoisting）
+- 不存在变量提升（variable hoisting）（原来只有函数作用域和全局作用域，在这两个作用域中会存在变量提升）
 - 变量必须先定义后使用
-- 变量（在当前作用域）不能重复定义，因此不能在函数内部重新声明参数
+- 变量（在当前块级作用域）不能重复定义，因此不能在函数内部重新声明参数
 
 ```ts
 function func(arg) {
@@ -37,6 +37,7 @@ function func(arg) {
 ```
 
 - 在 for 循环中使用 let 时，需要注意，就是设置循环变量的那部分是一个父作用域，而循环体内部是一个单独的子作用域。
+- let 声明在循环内部的行为是专门定义的，每次循环都会创建新的绑定，另外，在 for 循环中使用 const 可能引发错误
 
 ```ts
 for (let i = 0; i < 10; i++) {
@@ -82,7 +83,17 @@ const constantize = obj => {
 ```
 
 - ES6 中声明变量有几种方法？（六种，var/function/let/const/import/class）
-- 只有 var 和 function 声明的全局变量为顶层对象（浏览器环境的 window）的属性，其余则不是
+- 只有 var 和 function 声明的全局变量为顶层对象（浏览器环境的 window）的属性，用 let 和 const 在全局定义变量，不能覆盖全局变量，只能遮蔽
+
+```ts
+var RegExp = 'Hello';
+console.log(window.RegExp)
+
+let RegExp = 'Hello';
+console.log(RegExp)
+console.log(window.RegExp === RegExp)
+```
+
 - 如何获取当前环境的顶层对象？例如 Node 中为 global，浏览器环境中为 window
 
 ```js
@@ -131,3 +142,5 @@ console.log(tmp); // ReferenceError
 let {a, b} = {a: 1, b: 2};
 let [a, b] = [1, 2];
 ```
+
+- 最佳实践：默认使用 const，只有确实需要改变变量的值时使用 let，可以避免很多 BUG 的源头

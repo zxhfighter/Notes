@@ -17,7 +17,7 @@ class A {}
 
 ## 修饰类的实例
 
-上边的例子，是给类添加了静态属性，如果要添加实例属性，也很简单，修改 `target.prototype` 即可。
+上边的例子，是给类添加了静态属性，如果要添加实例属性，修改 `target.prototype` 即可。
 
 ```js
 function testable(target) {
@@ -30,7 +30,8 @@ class A {}
 
 ## 修饰器传递参数
 
-上边的例子，不使用装饰器时，isTestable 默认为 undefined；使用装饰器时，isTestable 为 true，我们希望 isTestable 的值通过修饰器参数传入。
+上边的例子，不使用装饰器时，isTestable 默认为 undefined；使用装饰器时，isTestable 为 true，我们希望 isTestable
+ 的值通过修饰器参数传入。
 
 可以通过闭包来实现，装饰器函数运行后返回装饰器即可。
 

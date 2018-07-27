@@ -29,6 +29,10 @@ const obj = {
         }
         this._wheels = value;
     }
+
+    *genNumbers() {
+        yield* [1, 2, 3, 4];
+    }
 };
 ```
 
@@ -43,6 +47,12 @@ const obj = {
     ['a' + 'bc']: 123,
     ['h' + 'ello']() {
         return 'world';
+    },
+    [Symbol.iterator]() {
+        return this;
+    }
+    next() {
+
     }
 };
 ```

@@ -25,7 +25,10 @@ function deepTraverse3(node, visit) {
         const latest = stack.pop();
         visit(latest);
 
-        Array.from(latest.children || []).reverse().forEach(x => stack.push(x));
+        Array
+            .from(latest.children || [])
+            .reverse()
+            .forEach(x => stack.push(x));
     }
 }
 
